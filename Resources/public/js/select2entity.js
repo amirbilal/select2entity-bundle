@@ -3,11 +3,24 @@ $(document).ready(function () {
   $('.select2entity').each(function(index) {
     var initValue;
     var multiple = $(this).data('multiple');
-
+    var tags = $(this).data('tags');
     var options = {
       placeholder: $(this).data('placeholder'),
       allowClear: true,
       multiple: multiple,
+      width: '100%',
+      tokenSeparators: [",", " "],
+      createSearchChoice: function(term, data) {
+		  if(!tags) return null;
+          if ($(data).filter(function() {
+              return this.text.localeCompare(term, 'en', {'sensitivity': 'base'}) === 0;
+          }).length === 0) {
+              return {
+                  id: term,
+                  text: term
+              };
+          }
+      },
       minimumInputLength: $(this).data('min-length'),
       ajax: {
         url: $(this).data('rpath'),
